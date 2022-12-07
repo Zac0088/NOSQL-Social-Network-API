@@ -1,27 +1,37 @@
-const { Course, Student } = require('../models');
+const { thought, user } = require('../models');
 
 module.exports = {
   // Get all courses
-  getCourses(req, res) {
-    Course.find()
-      .then((courses) => res.json(courses))
+  getThought(req, res) {
+    thought.find()
+      .then((thought) => res.json(thought))
       .catch((err) => res.status(500).json(err));
   },
   // Get a course
-  getSingleCourse(req, res) {
-    Course.findOne({ _id: req.params.courseId })
+  getSingleThought(req, res) {
+    thought.findOne({ _id: req.params.thoughtId })
       .select('-__v')
-      .then((course) =>
-        !course
-          ? res.status(404).json({ message: 'No course with that ID' })
-          : res.json(course)
+      .then((thought) =>
+        !thought
+          ? res.status(404).json({ message: 'No Thought with that ID' })
+          : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
   },
   // Create a course
-  createCourse(req, res) {
-    Course.create(req.body)
-      .then((course) => res.json(course))
+  createThought(req, res) {
+    thought.create(req.body)
+      .then((thought) => {
+       user.findOneAndUpdate(
+          { _id: req.body.userId },
+          { $addToSet: { thoughts: thought._id } },
+          { new: true })
+          .then((thought) => res.json(thought))
+          .catch((err) => {
+            console.log(err);
+            return res.status(500).json(err);
+          });
+      })
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
