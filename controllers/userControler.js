@@ -16,14 +16,14 @@ module.exports = {
   // Get a single user
   getSingleUser(req, res) {
     user.findOne({ _id: req.params.userId })
-    .populate ("thought")
-    .populate ("friends")
+      .populate("thought")
+      .populate("friends")
       .select('-__v')
       .then(async (user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID' })
           : res.json
-          ({ user })
+            ({ user })
       )
       .catch((err) => {
         console.log(err);
@@ -42,10 +42,10 @@ module.exports = {
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No such user exists' })
-          : thought.deleteMany( { username: user.username },)
+          : thought.deleteMany({ username: user.username },)
       )
       .then(() =>
-       res.json({ message: 'User successfully deleted' })
+        res.json({ message: 'User successfully deleted' })
       )
       .catch((err) => {
         console.log(err);
@@ -59,14 +59,14 @@ module.exports = {
     console.log(req.body);
     user.findOneAndUpdate(
       { _id: req.params.userId },
-       req.body,
+      req.body,
       { new: true }
     )
       .then((user) =>
         !user
           ? res
-              .status(404)
-              .json({ message: 'No user found with that ID :(' })
+            .status(404)
+            .json({ message: 'No user found with that ID :(' })
           : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
@@ -81,10 +81,28 @@ module.exports = {
       .then((user) =>
         !user
           ? res
-              .status(404)
-              .json({ message: 'No user found with that ID :(' })
+            .status(404)
+            .json({ message: 'No user found with that ID :(' })
           : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
+  },
+  addFriend(req, res) {
+    user.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
+      { new: true }
+    )
+      .then((user) =>
+        !user
+          ? res
+            .status(404)
+            .json({ message: "No user found with that id" })
+          : res.json(user)
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err)
+      });
   },
 };
