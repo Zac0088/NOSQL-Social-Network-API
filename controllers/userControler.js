@@ -15,8 +15,8 @@ module.exports = {
   },
   // Get a single user
   getSingleUser(req, res) {
-    user.findOne({ _id: req.params.userId })
-      .populate("thought")
+    user.findOne({ _id: req.params.UserId })
+      .populate("thoughts")
       .populate("friends")
       .select('-__v')
       .then(async (user) =>
@@ -38,7 +38,7 @@ module.exports = {
   },
   // Delete a user
   deleteUser(req, res) {
-    user.findOneAndRemove({ _id: req.params.userId })
+    user.findOneAndRemove({ _id: req.params.UserId })
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No such user exists' })
@@ -58,7 +58,7 @@ module.exports = {
     console.log('You are updating a user');
     console.log(req.body);
     user.findOneAndUpdate(
-      { _id: req.params.userId },
+      { _id: req.params.UserId },
       req.body,
       { new: true }
     )

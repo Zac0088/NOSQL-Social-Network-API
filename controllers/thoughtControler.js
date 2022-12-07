@@ -52,7 +52,7 @@ module.exports = {
   updateThought(req, res) {
     thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $addToSet: req.body },
+      { $set: req.body },
       { new: true }
     )
       .then((thought) =>
