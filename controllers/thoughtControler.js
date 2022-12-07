@@ -63,7 +63,7 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
 
-  createReaction(req, res) {
+  createReactions(req, res) {
     thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
       { $addToSet: { reactions: req.body } },
@@ -77,7 +77,7 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
 
-  deleteReaction(req, res) {
+  deleteReactions(req, res) {
     thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
       {
