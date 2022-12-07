@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongoose').Types;
-const { user, thought, reaction } = require('../models');
+const { user, thought } = require('../models');
 
 module.exports = {
   // Get all users
@@ -87,6 +87,7 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
+  // Add friend
   addFriend(req, res) {
     user.findOneAndUpdate(
       { _id: req.params.userId },
